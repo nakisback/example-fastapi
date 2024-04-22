@@ -11,8 +11,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 #SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres_nakisback_user:6pXOzUMMFi9q0rUwHYk7QUvkIg3n5QMH@dpg-coiiji779t8c738hild0-a.singapore-postgres.render.com/postgres_nakisback"
 #print(f"{SQLALCHEMY_DATABASE_URL}")
 
-#engine = create_engine(SQLALCHEMY_DATABASE_URL)
-engine = create_async_engine(url=settings.database_url, echo=True)
+SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:\
+{settings.database_port}/{settings.database_name}'
 
 async def get_session():
     async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
