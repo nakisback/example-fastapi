@@ -5,39 +5,40 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from .config import settings
-from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
-from . import models
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 #SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
 #SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres_nakisback_user:6pXOzUMMFi9q0rUwHYk7QUvkIg3n5QMH@dpg-coiiji779t8c738hild0-a.singapore-postgres.render.com/postgres_nakisback"
 #print(f"{SQLALCHEMY_DATABASE_URL}")
 
-SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:\
-{settings.database_port}/{settings.database_name}'
+#SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
 
-engine = create_async_engine(url=settings.database_url, echo=True)
+SQLALCHEMY_DATABASE_URL = f'postgresql://postgres:1234567890@localhost:5432/fastapi'
 
-async def get_session():
-    async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
-    yield async_session
+print(settings.database_url)
+engine = create_engine(url=settings.database_url)
 
-#SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+# async def get_session():
+#     async_session = sessionmaker(bind=engine, expire_on_commit=False)
+#     yield async_session
+
+SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
 
 def get_db():
-    #db = SessionLocal()
-    db = get_session()
+    db = SessionLocal()
+    #db = get_session()
     try:
         yield db
     finally:
         db.close()
 
-async def init_db():
-    async with engine.begin() as conn:
-        from models import User
-        await conn.run_sync(Base.metadata.create_all)
+# async def init_db():
+#     async with engine.begin() as conn:
+#         from .models import User
+#         await conn.run_sync(Base.metadata.create_all)
 
 # Connects to database directly using postgres
 # while True:

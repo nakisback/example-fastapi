@@ -4,13 +4,16 @@ from . import models
 from .database import engine
 from .routers import post, user, auth, vote
 from .config import settings
+#from . import create_app
 
-# models.Base.metadata.create_all(bind=engine)
+models.Base.metadata.create_all(bind=engine)
 
 # Startup the server:
 # uvicorn app.main:app --reload
 
 app = FastAPI()
+
+#app = create_app()
 
 origins = ["*"]
 
