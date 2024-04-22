@@ -6,6 +6,7 @@ from psycopg2.extras import RealDictCursor
 import time
 from .config import settings
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
+from . import models
 
 #SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
 #SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres_nakisback_user:6pXOzUMMFi9q0rUwHYk7QUvkIg3n5QMH@dpg-coiiji779t8c738hild0-a.singapore-postgres.render.com/postgres_nakisback"
@@ -13,6 +14,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sess
 
 SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:\
 {settings.database_port}/{settings.database_name}'
+
+engine = create_async_engine(url=settings.database_url, echo=True)
 
 async def get_session():
     async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
@@ -30,6 +33,11 @@ def get_db():
         yield db
     finally:
         db.close()
+
+async def init_db():
+    async with engine.begin() as conn:
+        from models import User
+        await conn.run_sync(Base.metadata.create_all)
 
 # Connects to database directly using postgres
 # while True:
