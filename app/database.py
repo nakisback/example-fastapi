@@ -6,8 +6,9 @@ from psycopg2.extras import RealDictCursor
 import time
 from .config import settings
 
-SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:\
-{settings.database_port}/{settings.database_name}'
+#SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:\
+#{settings.database_port}/{settings.database_name}'
+SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres_nakisback_user:6pXOzUMMFi9q0rUwHYk7QUvkIg3n5QMH@dpg-coiiji779t8c738hild0-a.singapore-postgres.render.com/postgres_nakisback"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
