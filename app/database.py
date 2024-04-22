@@ -5,19 +5,27 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 import time
 from .config import settings
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, async_sessionmaker
 
-SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:\
-{settings.database_port}/{settings.database_name}'
+#SQLALCHEMY_DATABASE_URL = f'postgresql://{settings.database_username}:{settings.database_password}@{settings.database_hostname}:{settings.database_port}/{settings.database_name}'
+#SQLALCHEMY_DATABASE_URL = "postgresql+psycopg2://postgres_nakisback_user:6pXOzUMMFi9q0rUwHYk7QUvkIg3n5QMH@dpg-coiiji779t8c738hild0-a.singapore-postgres.render.com/postgres_nakisback"
+#print(f"{SQLALCHEMY_DATABASE_URL}")
 
-engine = create_engine(SQLALCHEMY_DATABASE_URL)
+#engine = create_engine(SQLALCHEMY_DATABASE_URL)
+engine = create_async_engine(url=settings.database_url, echo=True)
 
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+async def get_session():
+    async_session = async_sessionmaker(bind=engine, expire_on_commit=False)
+    yield async_session
+
+#SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
 
 def get_db():
-    db = SessionLocal()
+    #db = SessionLocal()
+    db = get_session()
     try:
         yield db
     finally:
