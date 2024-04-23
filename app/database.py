@@ -15,7 +15,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 
 SQLALCHEMY_DATABASE_URL = f'postgresql://postgres:1234567890@localhost:5432/fastapi'
 
-print(settings.database_url)
+print(f"Creating engine at: {settings.database_url}")
 engine = create_engine(url=settings.database_url)
 
 # async def get_session():
